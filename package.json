@@ -1,0 +1,70 @@
+{
+  "name": "hardhat-lambda-layer",
+  "private": false,
+  "version": "1.0.0",
+  "description": "Lambda Layer for deploying hardhat ",
+  "main": "lib/index.js",
+  "bin": "lib/bin.js",
+  "scripts": {
+    "setup": "./init-template.js",
+    "build": "(cd layer/nodejs && yarn) && cp base.yml serverless.yml && serverless-yaml",
+    "deploy": "serverless-stage deploy --region us-east-1 && serverless-stage deploy --region us-east-2 && domino push \"hardhat-layer:deploy\"",
+    "deployfnc": "serverless-stage deployskip -f",
+    "logs": "serverless-stage logs --startTime 10m -t -f ",
+    "remove": "serverless-stage remove",
+    "onwatch": "yarn build && yarn deploy",
+    "watch": "yarn rebuild && yarn livelink watch",
+    "rewatch": "domino await \"hardhat-layer:start\" && yarn watch",
+    "rebuild": "yarn build && yarn deploy && noti -m \"hardhat-layer force deployed\" && domino push \"hardhat-layer:rebuild\"",
+    "clean": "(cd ../.. && yarn clearcache) && yarn ; npx fix-local-dependencies && domino push \"hardhat-layer:clean\"",
+    "restart": "yarn clean && domino push \"hardhat-layer:start\" && yarn livelink start",
+    "cleanup": "serverless-stage remove && sleep 10 && echo \"cleaned up\"",
+    "prepare": "install-peers",
+    "pre-commit": "yarn serverless deploy --noDeploy --stage dev --region us-east-1"
+  },
+  "repository": "https://github.com/rhdeck/hardhat-lambda-layer",
+  "author": "Ray Deck",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rhdeck/hardhat-lambda-layer/issues"
+  },
+  "homepage": "https://github.com/rhdeck/hardhat-lambda-layer#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@raydeck/livelink": "^1.5.2",
+    "@raydeck/serverless-setup": "^3.1.2",
+    "@raydeck/serverless-stage": "^3.2.0",
+    "@raydeck/serverless-yaml": "^1.3.1",
+    "@types/inquirer": "^7.3.1",
+    "@types/node": "^14.14.17",
+    "@types/validate-npm-package-name": "^3.0.2",
+    "commanderdoc": "^0.1.11",
+    "concat-md": "^0.3.5",
+    "git-branch-is": "^4.0.0",
+    "husky": "^4.3.6",
+    "install-peers-cli": "^2.2.0",
+    "serverless": "^3.21.0",
+    "typedoc": "^0.20.28",
+    "typedoc-plugin-markdown": "^3.5.0",
+    "typescript": "^4.2.2",
+    "validate-npm-package-name": "^3.0.0"
+  },
+  "files": [
+    "src",
+    "lib"
+  ],
+  "dependencies": {
+    "commander": "^6.2.1",
+    "inquirer": "^7.3.3"
+  },
+  "liveLink": {
+    "ignoreMasks": [
+      "package.tgz",
+      "lib/**",
+      "README.md",
+      "docs/**",
+      "docstemp/**"
+    ]
+  }
+}

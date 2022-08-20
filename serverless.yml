@@ -1,0 +1,17 @@
+"service": "${self:custom.config.name}"
+"provider":
+  "name": "aws"
+  "runtime": "nodejs14.x"
+"layers":
+  "hardhat":
+    "path": "layer"
+    "description": "Hardhat External node modules layer"
+    "name": "${self:custom.config.name}"
+    "compatibleRuntimes":
+      - "nodejs14.x"
+      - "nodejs16.x"
+    "licenseInfo": "LGPL"
+"resources":
+  "Description": "Hardhat layer stack"
+"custom":
+  "config": "${file(./config.json)}"
